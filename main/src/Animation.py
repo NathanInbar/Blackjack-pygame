@@ -2,21 +2,25 @@
 
 from collections import deque
 from math import sqrt
-
+from src.EventSystem import Event, EventSystem
 
 class Animator:
     
     def __init__(self, framerate):
         self.framerate = framerate
-        self.transformQueue = deque()# (object, transformRequest, doneCheck)
-
+        #self.transformQueue = deque()# (object, transformRequest, doneCheck)
+        self.transformQueue = EventSystem()
     
     def lerp(self, object, destination, time):
         x_step,y_step = self.getLerpValues(object.coordinates,destination, time)
-        #print(f"x:{x_step},y:{y_step}")
-        self.transformQueue.append((object, lambda: object.translatePosition(x_step,y_step), \
-                                            lambda: abs(object.coordinates[1] - destination[1])<1 and abs(object.coordinates[0] - destination[0])<1,\
-                                            lambda: object.updatePosition(destination)))
+        lerpEvent = Event(
+            action=lambda: object.translatePosition(x_step,y_step), \
+            finishFlag=lambda: abs(object.coordinates[1] - destination[1])<1 and abs(object.coordinates[0] - destination[0])<1,\
+            postOP=lambda: object.updatePosition(destination))
+        # lerpEvent = Event(
+        #     action=lambda: object.translatePosition(x_step,y_step), \
+        #     finishFlag=lambda: abs(object.coordinates[1] - destination[1])<1 and abs(object.coordinates[0] - destination[0])<1)
+        self.transformQueue.push(lerpEvent)
 
     def getLerpValues(self, pointA, pointB, time):
         
@@ -29,17 +33,7 @@ class Animator:
         return (x_speed, y_speed)
 
     def update(self):
-        cleanup=[]
-        for i,transformInstructions in enumerate(self.transformQueue):
-            object,transform,completionCriteria,postOP = transformInstructions
-            if not completionCriteria():
-                transform()
-            else:
-                postOP()
-                cleanup.append(i)
-        
-        for i in cleanup:
-            del self.transformQueue[i]
+        self.transformQueue.update()
             
 
         

@@ -32,7 +32,10 @@ class Deck:
         card,isInDeck = self.deck[len(self.deck)-i][0],self.deck[len(self.deck)-i][1]
         while not isInDeck:
             i+=1
-            card,isInDeck = self.deck[len(self.deck)-i][0],self.deck[len(self.deck)-i][1]
+            index = len(self.deck)-i
+            if index < 0:
+                return None
+            card,isInDeck = self.deck[index][0],self.deck[index][1]
 
         self.deck[len(self.deck)-i][1] = False
         return card
@@ -51,9 +54,15 @@ class Deck:
 
     def resetDeck(self):
         for i in range(len(self.deck)):
+            self.deck[i][0].updatePosition(self.coordinates)
             self.deck[i][1] = True
 
     def render(self,win):
 
         for card,isInDeck in self.deck:
-            card.render(win, isInDeck)
+            if isInDeck: 
+                card.render(win, isInDeck)
+
+        for card,isInDeck in reversed(self.deck):
+            if not isInDeck: 
+                card.render(win, isInDeck)
