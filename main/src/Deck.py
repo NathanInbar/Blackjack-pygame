@@ -21,7 +21,22 @@ class Deck:
             for value in self.values:
                 self.deck[i] = [Card(suit=suit, suit_color=suit_color, value=value, coordinates= self.coordinates), True]
                 i+=1
-              
+
+    def shuffleDeck(self, amount=591):
+        for i in range(amount):
+            i,j = randrange(0,len(self.deck)), randrange(0,len(self.deck))#note: sometimes will 'swap' with itself. not really a problem
+            self.deck[i],self.deck[j] = self.deck[j],self.deck[i]
+
+    def pop(self):
+        i = 1
+        card,isInDeck = self.deck[len(self.deck)-i][0],self.deck[len(self.deck)-i][1]
+        while not isInDeck:
+            i+=1
+            card,isInDeck = self.deck[len(self.deck)-i][0],self.deck[len(self.deck)-i][1]
+
+        self.deck[len(self.deck)-i][1] = False
+        return card
+
     def getRandomCard(self):
         i = randrange(0,len(self.deck))
         count = 1

@@ -23,7 +23,6 @@ class Card(UIComponent):
 
         return value
 
-
     def renderBack(self, win):
         back_color = (40,12,23)
         pygame.draw.rect(win, back_color, self.rect)
