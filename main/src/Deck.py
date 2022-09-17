@@ -22,6 +22,15 @@ class Deck:
                 self.deck[i] = [Card(suit=suit, suit_color=suit_color, value=value, coordinates= self.coordinates), True]
                 i+=1
 
+    def shuffleDeck(self, amount=591):
+        for i in range(amount):
+            i,j = randrange(0,len(self.deck)), randrange(0,len(self.deck))#note: sometimes will 'swap' with itself. not really a problem
+            self.deck[i],self.deck[j] = self.deck[j],self.deck[i]
+
+    def pop(self):
+        card = self.deck[len(self.deck)-1][0]
+        self.deck[len(self.deck)-1][1] = False
+        return card
 
     def getRandomCard(self):
         i = randrange(0,len(self.deck))

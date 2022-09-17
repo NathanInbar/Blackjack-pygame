@@ -14,7 +14,7 @@ class App:
     HEIGHT = 400
 
     clock = pygame.time.Clock()
-    FPS = 15
+    FPS = 27
     frame_count = 0
     BKG_COLOR = (5,38,20)
     #BKG_COLOR = (230,230,230) #-- DEBUG
@@ -26,7 +26,8 @@ class App:
         self.animator = Animator()
 
         self.deck = Deck( (self.WIDTH - 120, 20) )
-        self.card = self.deck.getRandomCard()
+        self.deck.shuffleDeck()
+        self.card = self.deck.pop()
 
         self.GameController = BlackJack(deck=self.deck)
 
