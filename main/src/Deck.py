@@ -28,8 +28,13 @@ class Deck:
             self.deck[i],self.deck[j] = self.deck[j],self.deck[i]
 
     def pop(self):
-        card = self.deck[len(self.deck)-1][0]
-        self.deck[len(self.deck)-1][1] = False
+        i = 1
+        card,isInDeck = self.deck[len(self.deck)-i][0],self.deck[len(self.deck)-i][1]
+        while not isInDeck:
+            i+=1
+            card,isInDeck = self.deck[len(self.deck)-i][0],self.deck[len(self.deck)-i][1]
+
+        self.deck[len(self.deck)-i][1] = False
         return card
 
     def getRandomCard(self):

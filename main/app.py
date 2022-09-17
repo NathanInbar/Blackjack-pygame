@@ -14,7 +14,7 @@ class App:
     HEIGHT = 400
 
     clock = pygame.time.Clock()
-    FPS = 27
+    FPS = 30
     frame_count = 0
     BKG_COLOR = (5,38,20)
     #BKG_COLOR = (230,230,230) #-- DEBUG
@@ -23,15 +23,14 @@ class App:
     def __init__(self):
         pygame.display.set_caption("Blackjack")
 
-        self.animator = Animator()
+        self.animator = Animator(framerate=self.FPS)
 
         self.deck = Deck( (self.WIDTH - 120, 20) )
         self.deck.shuffleDeck()
         self.card = self.deck.pop()
 
-        self.GameController = BlackJack(deck=self.deck)
 
-        #----
+        #---- UI ELEMENTS
         self.playerSlot = CardSlot((self.WIDTH/2,self.HEIGHT/2+40),80,110,(3,28,15))
         self.playerTitle = Header((self.WIDTH/2+40,self.HEIGHT/2+30),80,20,(10,10,10),"Your Hand","centered",font_name="Times New Roman",font_size=15)
         self.playerScore = Header((self.WIDTH/2+40,self.HEIGHT/2+160),80,20,(230,230,230),0,"centered",font_name="Times New Roman",font_size=15)
@@ -52,8 +51,10 @@ class App:
 
         self.playerHit = Button((self.WIDTH-120,self.HEIGHT/2+40),75,35,(10,10,10),"Hit",None,font_name="Times New Roman",font_size=20)
         self.playerStand = Button((self.WIDTH-120,self.HEIGHT/2+80),75,35,(10,10,10),"Stand",None,font_name="Times New Roman",font_size=20)
+        # - - - -
 
-        self.animator.lerp(self.card, (self.playerSlot.coordinates[0]+5,self.playerSlot.coordinates[1]+5), 2, self.FPS)
+        #self.animator.lerp(self.card, (self.playerSlot.coordinates[0]+5,self.playerSlot.coordinates[1]+5), 0.5, self.FPS)
+        #self.GameController = BlackJack(deck=self.deck, animator=self.animator,playerSlot=self.playerSlot.coordinates,dealerSlot=self.dealerSlot.coordinates)
 
 
     def update(self):
@@ -100,7 +101,6 @@ class App:
 
         self.playerHit.render(self.win)
         self.playerStand.render(self.win)
-
 
         self.deck.render(self.win)
         # - - - -
