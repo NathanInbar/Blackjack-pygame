@@ -2,15 +2,16 @@ from collections import deque
 
 class Event:
 
-    def __init__(self, action, postOP=None, finishFlag=True):
+    def __init__(self, action, postOP=None, finishFlag=lambda: True):
         '''if finish flag is true, this event is a single event. else action runs until finished. postOP func happens on exit'''
         self.action = action
         self.finishFlag = finishFlag
+        self.postOP = postOP
 
     def run(self):
         '''runs an action and returns whether it has been completed or not'''
         self.action()
-        return self.finishFlag
+        return self.finishFlag()
     
 
 class EventSystem:
@@ -30,8 +31,9 @@ class EventSystem:
             if flag:
                 if event.postOP:
                     event.postOP()
-                    
-                cleanup.append(i)
 
-        for i in cleanup:
-            del self.event_queue[i]
+                cleanup.append(event)
+
+        
+        for e in cleanup:
+            self.event_queue.remove(e)

@@ -105,14 +105,20 @@ class Log(UIComponent):
         self.maxItems = maxItems
         self.textLog = deque()
 
-    def pushText(self, text):
+    def pushText(self, text:TextComponent):
         self.textLog.append(text)
         if len(self.textLog)>self.maxItems:
             self.textLog.pop()
 
+    def pushText(self, text:str):
+        text = TextComponent(text,"Times New Roman",font_size=15,text_color=(235,177,52))
+        self.textLog.append(text)
+        if len(self.textLog)>self.maxItems:
+            self.textLog.popleft()
+
     def render(self, win):
         heightDisplacement = 0
-        for text in self.textLog:
+        for text in reversed(self.textLog):
             win.blit(text.text, (self.coordinates[0], self.coordinates[1]-heightDisplacement))
             heightDisplacement += text.font.size(text.text_string)[1]
 
