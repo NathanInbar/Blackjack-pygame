@@ -5,7 +5,7 @@ from src.util import TextComponent
 from src.util import Header, Log, Button
 from src.Deck import Deck
 from src.CardSlot import CardSlot
-from src.Game import BlackJack
+#from src.Game import BlackJack
 
 class App:
     pygame.init()
@@ -27,8 +27,6 @@ class App:
 
         self.deck = Deck( (self.WIDTH - 120, 20) )
         self.deck.shuffleDeck()
-        self.card = self.deck.pop()
-
 
         #---- UI ELEMENTS
         self.playerSlot = CardSlot((self.WIDTH/2,self.HEIGHT/2+40),80,110,(3,28,15))
@@ -45,15 +43,15 @@ class App:
         self.dealerScore = Header((self.WIDTH/2+40,self.HEIGHT/2-30),80,20,(230,230,230),0,"centered",font_name="Times New Roman",font_size=15)
 
         self.actionLog = Log((10,self.HEIGHT-50),100,200,5)
-        self.actionLog.pushText(TextComponent("you started a round"))
-        self.actionLog.pushText(TextComponent("bet: $500"))
-        self.actionLog.pushText(TextComponent("you lost the bet"))
+        #self.actionLog.pushText(TextComponent("you started a round"))
+        #self.actionLog.pushText(TextComponent("bet: $500"))
+        #self.actionLog.pushText(TextComponent("you lost the bet"))
 
         self.playerHit = Button((self.WIDTH-120,self.HEIGHT/2+40),75,35,(10,10,10),"Hit",None,font_name="Times New Roman",font_size=20)
         self.playerStand = Button((self.WIDTH-120,self.HEIGHT/2+80),75,35,(10,10,10),"Stand",None,font_name="Times New Roman",font_size=20)
         # - - - -
 
-        #self.animator.lerp(self.card, (self.playerSlot.coordinates[0]+5,self.playerSlot.coordinates[1]+5), 0.5, self.FPS)
+        self.animator.lerp(self.deck.pop(), (self.playerSlot.coordinates[0]+5,self.playerSlot.coordinates[1]+5), 0.5)
         #self.GameController = BlackJack(deck=self.deck, animator=self.animator,playerSlot=self.playerSlot.coordinates,dealerSlot=self.dealerSlot.coordinates)
 
 
@@ -66,8 +64,8 @@ class App:
 
             # - - - - Update Actors
 
-            self.playerWallet.setText(f"Wallet: ${self.GameController.wallet}")
-            self.playerBet.setText(f"Bet: ${self.GameController.bet_amount}")
+            #self.playerWallet.setText(f"Wallet: ${self.GameController.wallet}")
+            #self.playerBet.setText(f"Bet: ${self.GameController.bet_amount}")
 
 
         self.animator.update()
