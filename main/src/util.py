@@ -23,6 +23,16 @@ class UIComponent():
         if self.rect.collidepoint(mouse) and pygame.mouse.get_pressed()[0]:
             return True
 
+    def updatePosition(self, coordinates):
+        self. coordinates = coordinates
+        self.rect = pygame.Rect(coordinates[0], coordinates[1], self.width, self.height)
+
+    def translatePosition(self, x_displacement, y_displacement):
+        #print("im translating!")
+        self.coordinates = (self.coordinates[0]+x_displacement,self.coordinates[1]+y_displacement)
+        self.rect = pygame.Rect(self.coordinates[0], self.coordinates[1], self.width, self.height)
+
+
 class TextComponent():
 
     def __init__(self, text_string, font_name="Arial", font_size=30, text_color=(255,255,255)):

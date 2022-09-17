@@ -21,7 +21,8 @@ class Deck:
             for value in self.values:
                 self.deck[i] = [Card(suit=suit, suit_color=suit_color, value=value, coordinates= self.coordinates), True]
                 i+=1
-              
+
+
     def getRandomCard(self):
         i = randrange(0,len(self.deck))
         count = 1

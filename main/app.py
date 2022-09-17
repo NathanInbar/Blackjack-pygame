@@ -1,4 +1,6 @@
 import pygame
+
+from src.Animation import Animator
 from src.util import TextComponent
 from src.util import Header, Log, Button
 from src.Deck import Deck
@@ -12,7 +14,7 @@ class App:
     HEIGHT = 400
 
     clock = pygame.time.Clock()
-    FPS = 27
+    FPS = 15
     frame_count = 0
     BKG_COLOR = (5,38,20)
     #BKG_COLOR = (230,230,230) #-- DEBUG
@@ -21,7 +23,11 @@ class App:
     def __init__(self):
         pygame.display.set_caption("Blackjack")
 
+        self.animator = Animator()
+
         self.deck = Deck( (self.WIDTH - 120, 20) )
+        self.card = self.deck.getRandomCard()
+
         self.GameController = BlackJack(deck=self.deck)
 
         #----
@@ -46,6 +52,9 @@ class App:
         self.playerHit = Button((self.WIDTH-120,self.HEIGHT/2+40),75,35,(10,10,10),"Hit",None,font_name="Times New Roman",font_size=20)
         self.playerStand = Button((self.WIDTH-120,self.HEIGHT/2+80),75,35,(10,10,10),"Stand",None,font_name="Times New Roman",font_size=20)
 
+        self.animator.lerp(self.card, (self.playerSlot.coordinates[0]+5,self.playerSlot.coordinates[1]+5), 2, self.FPS)
+
+
     def update(self):
         
         for event in pygame.event.get():
@@ -58,6 +67,8 @@ class App:
             self.playerWallet.setText(f"Wallet: ${self.GameController.wallet}")
             self.playerBet.setText(f"Bet: ${self.GameController.bet_amount}")
 
+
+        self.animator.update()
             # - - - - 
 
             # if event.type == pygame.MOUSEBUTTONDOWN:
@@ -72,7 +83,6 @@ class App:
         self.win.fill(self.BKG_COLOR)
         # - - - - Render Actors
 
-        self.deck.render(self.win)
         self.playerSlot.render(self.win)
         self.dealerSlot.render(self.win)
         self.playerTitle.render(self.win)
@@ -90,6 +100,8 @@ class App:
         self.playerHit.render(self.win)
         self.playerStand.render(self.win)
 
+
+        self.deck.render(self.win)
         # - - - -
         pygame.display.flip()
 
