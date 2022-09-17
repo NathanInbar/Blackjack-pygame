@@ -1,4 +1,4 @@
-from Deck import Deck
+from src.Deck import Deck
 
 class Game:
 

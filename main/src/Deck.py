@@ -1,24 +1,25 @@
+from inspect import CORO_CLOSED
 from random import randrange
-from Card import Card
+from src.Card import Card
 
 class Deck:
 
-    suites = ["♤","♥","♧","♢"]
+    suits = {"♠":(0,0,0),"♥":(230,20,40),"♣":(0,0,0),"♦":(230,20,40)}
     values = [2,3,4,5,6,7,8,9,10,"J","Q","K","A"]
 
-    def __init__(self):
+    def __init__(self, coordinates):
 
-        # card, isInDeck
-        self.deck = [None]*52
+        self.deck = [None]*52# card, isInDeck
+        self.coordinates = coordinates
 
         self.generateDeck()
 
     def generateDeck(self):
 
         i = 0
-        for suite in self.suites:
+        for suit,suit_color in self.suits.items():
             for value in self.values:
-                self.deck[i] = [Card(suite=suite, value=value), True]
+                self.deck[i] = [Card(suit=suit, suit_color=suit_color, value=value, coordinates= self.coordinates), True]
                 i+=1
               
     def getRandomCard(self):
@@ -36,3 +37,8 @@ class Deck:
     def resetDeck(self):
         for i in range(len(self.deck)):
             self.deck[i][1] = True
+
+    def render(self,win):
+
+        for card,isInDeck in self.deck:
+            card.render(win, isInDeck)
