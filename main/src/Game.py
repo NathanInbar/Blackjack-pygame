@@ -1,11 +1,12 @@
 from src.Deck import Deck
 
-class Game:
+class BlackJack:
 
-    def __init__(self, startAmount=1000):
+    def __init__(self, deck, walletStart=1000, betStart=100):
 
-        self.wallet = startAmount
-        self.deck = Deck()
+        self.wallet = walletStart
+        self.bet_amount = betStart
+        self.deck = deck
 
         self.playerHand = 0
         self.dealerHand = 0

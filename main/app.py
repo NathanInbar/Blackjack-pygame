@@ -1,5 +1,9 @@
 import pygame
+from src.util import TextComponent
+from src.util import Header, Log
 from src.Deck import Deck
+from src.CardSlot import CardSlot
+from src.Game import BlackJack
 
 class App:
     pygame.init()
@@ -16,7 +20,26 @@ class App:
 
     def __init__(self):
         pygame.display.set_caption("Blackjack")
+
+
         self.deck = Deck( (self.WIDTH - 120, 20) )
+        self.GameController = BlackJack(deck=self.deck)
+
+        #----
+        self.playerSlot = CardSlot((self.WIDTH/2,self.HEIGHT/2+40),80,110,(3,28,15))
+        self.playerTitle = Header((self.WIDTH/2+40,self.HEIGHT/2+30),80,20,(10,10,10),"Your Hand","centered",font_name="Times New Roman",font_size=15)
+        self.playerScore = Header((self.WIDTH/2+40,self.HEIGHT/2+160),80,20,(230,230,230),0,"centered",font_name="Times New Roman",font_size=15)
+        self.playerWallet = Header((10,5),80,20,(230,230,230),"",font_name="Times New Roman",font_size=30)
+        self.playerBet = Header((15,40),80,20,(230,230,230),"",font_name="Times New Roman",font_size=30)
+        
+        self.dealerSlot = CardSlot((self.WIDTH/2,self.HEIGHT/2-150),80,110,(3,28,15))
+        self.dealerTitle = Header((self.WIDTH/2+40,self.HEIGHT/2-160),80,20,(10,10,10),"Dealer's Hand","centered",font_name="Times New Roman",font_size=15)
+        self.dealerScore = Header((self.WIDTH/2+40,self.HEIGHT/2-30),80,20,(230,230,230),0,"centered",font_name="Times New Roman",font_size=15)
+
+        self.actionLog = Log((5,self.HEIGHT-50),100,200,5)
+        self.actionLog.pushText(TextComponent("you started a round"))
+        self.actionLog.pushText(TextComponent("bet: $500"))
+        self.actionLog.pushText(TextComponent("you lost the bet"))
 
     def update(self):
         
@@ -27,6 +50,8 @@ class App:
 
             # - - - - Update Actors
 
+            self.playerWallet.setText(f"Wallet: ${self.GameController.wallet}")
+            self.playerBet.setText(f"Bet: ${self.GameController.bet_amount}")
 
             # - - - - 
 
@@ -43,6 +68,17 @@ class App:
         # - - - - Render Actors
 
         self.deck.render(self.win)
+        self.playerSlot.render(self.win)
+        self.dealerSlot.render(self.win)
+        self.playerTitle.render(self.win)
+        self.dealerTitle.render(self.win)
+        self.playerScore.render(self.win)
+        self.dealerScore.render(self.win)
+        
+        self.playerWallet.render(self.win)
+        self.playerBet.render(self.win)
+
+        self.actionLog.render(self.win)
 
         # - - - -
         pygame.display.flip()

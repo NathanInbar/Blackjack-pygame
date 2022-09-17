@@ -2,6 +2,7 @@ from cgitb import text
 import pygame
 from typing import Tuple
 from math import floor
+from collections import deque
 
 def getRectCenter( pos,width,height=None ):
     if not height: height = width
@@ -65,3 +66,62 @@ class TextComponent():
 
         if alignment == "BR":
             return (container_coords[0]+container_size[0]-textDim[0]-padding, container_coords[1]+container_size[1] -padding -textDim[1])
+
+class Header(UIComponent, TextComponent):
+
+    def __init__(self, coordinates, width, height, color, text_string="", alignment="", font_name="consolas", font_size=30):
+        text_string = str(text_string)
+        UIComponent.__init__(self, coordinates, width, height, (0,0,0))
+        TextComponent.__init__(self, text_string, font_name=font_name, font_size=font_size, text_color=color)
+        self.alignment = alignment
+
+    def setText(self, text_string):
+        self.text_string = text_string
+        self.text = self.font.render(text_string,1,self.text_color)
+
+    def render(self, win):
+        if self.alignment == "centered":
+            textDim = self.font.size(self.text_string)
+            textDim = getRectCenter((0,0),textDim[0], textDim[1])
+            win.blit(self.text,  (self.coordinates[0]-textDim[0], self.coordinates[1]-textDim[1]))
+        else:
+            win.blit(self.text, self.coordinates)
+
+class Log(UIComponent):
+
+    def __init__(self, coordinates, width, height, maxItems):
+        UIComponent.__init__(self,coordinates,width,height,color=(0,0,0))
+
+        self.maxItems = maxItems
+        self.textLog = deque()
+
+    def pushText(self, text):
+        self.textLog.append(text)
+        if len(self.textLog)>self.maxItems:
+            self.textLog.pop()
+
+    def render(self, win):
+        heightDisplacement = 0
+        for text in self.textLog:
+            win.blit(text.text, (self.coordinates[0], self.coordinates[1]-heightDisplacement))
+            heightDisplacement += text.font.size(text.text_string)[1]
+
+class Button(UIComponent, TextComponent):
+
+    def __init__(self, coordinates: Tuple[int,int], width, height, color, \
+                         text_string, action, font_name="Arial", font_size=30, font_color=(255,255,255)):
+
+        UIComponent.__init__(self,coordinates, width, height, color)
+        TextComponent.__init__(self,text_string,font_name, font_size, font_color)
+
+        self.action = action
+
+    def update(self):
+
+        if (self.isClicked()):
+            self.action()
+
+    def render(self,win):
+        pygame.draw.rect(win,self.color,self.rect)
+        centeredText = self.getTextCenter(self.coordinates, (self.width, self.height))
+        win.blit(self.text, centeredText )
